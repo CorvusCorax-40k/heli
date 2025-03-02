@@ -1,0 +1,121 @@
+local colorList = {}
+
+colorList[-6] = colors.black
+colorList[-5] = colors.black
+colorList[-4] = colors.black
+colorList[-3] = colors.black
+colorList[-2] = colors.black
+colorList[-1] = colors.black
+colorList[0] = colors.black
+colorList[1] = colors.gray
+colorList[2] = colors.lightGray
+colorList[3] = colors.white
+
+
+function printX (x, y, val)
+  local sign = val / math.abs(val)
+  val = math.abs(val)
+
+  paintutils.drawFilledBox(x + 6*sign, y, x + 6*sign + 1, y, colorList[val-6])
+  if (val > 6) then
+    val = 6
+  end
+
+  paintutils.drawFilledBox(x + 4*sign, y, x + 4*sign + 1, y, colorList[val-3])
+  if (val > 3) then
+    val = 3
+  end
+
+  paintutils.drawFilledBox(x + 2*sign, y, x + 2*sign + 1, y, colorList[val])
+
+  paintutils.drawFilledBox(x, y, x + 1, y, colors.white)
+end
+
+
+function printY (x, y, val)
+  local sign = val / math.abs(val)
+  val = math.abs(val)
+
+  paintutils.drawFilledBox(x, y + sign*3, x+1, y + sign*3, colorList[val-6])
+  if (val > 6) then
+    val = 6
+  end
+
+  paintutils.drawFilledBox(x, y + sign*2, x+1, y + sign*2, colorList[val-3])
+  if (val > 3) then
+    val = 3
+  end
+
+  paintutils.drawFilledBox(x, y + sign, x+1, y + sign, colorList[val])
+
+  paintutils.drawFilledBox(x, y, x+1, y, colors.white)
+end
+
+
+function printPR (x, y, pitch, roll)
+
+  term.setCursorPos(x-1, y-4)
+  for i=-4, 4, 1 do
+    term.setCursorPos(x-1, y+i)
+    term.blit(string.rep(string.char(127), 4), "7777", "8888")
+  end
+
+  for i=-1, 1, 1 do
+    term.setCursorPos(x-7, y+i)
+    term.blit(string.rep(string.char(127), 16), "7777777777777777", "8888888888888888")
+  end
+
+
+  paintutils.drawFilledBox(x, y-3, x+1, y+3, colors.black)
+  paintutils.drawFilledBox(x-6, y, x+7, y, colors.black)
+
+  printX(x, y, roll)
+  printY(x, y, pitch)
+
+  if (pitch == 0 and roll == 0) then
+    paintutils.drawFilledBox(x, y, x+1, y, colors.green)
+  end
+end
+
+
+function printYaw (x, y, yaw)
+  
+  for i=-1, 1, 1 do
+    term.setCursorPos(x-7, y+i)
+    term.blit(string.rep(string.char(127), 16), "7777777777777777", "8888888888888888")
+  end
+
+  paintutils.drawFilledBox(x-6, y, x+7, y, colors.black)
+
+  printX(x, y, yaw)
+
+  if (yaw == 0) then
+    paintutils.drawFilledBox(x, y, x+1, y, colors.green)
+  end
+end
+
+
+function printCol (x, y, col)
+
+  term.setCursorPos(x-1, y-4)
+
+  for i=-4, 4, 1 do
+    term.setCursorPos(x-1, y+i)
+    term.blit(string.rep(string.char(127), 4), "7777", "8888")
+  end
+
+  paintutils.drawFilledBox(x, y-3, x+1, y+3, colors.black)
+
+  printY(x, y, col)
+
+  if (col == 0) then
+    paintutils.drawFilledBox(x, y, x+1, y, colors.green)
+  end
+end
+
+
+return {
+  printPR = printPR,
+  printYaw = printYaw,
+  printCol = printCol,
+}
